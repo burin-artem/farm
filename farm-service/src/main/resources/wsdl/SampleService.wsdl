@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2011 rel. 2 (http://www.altova.com) by AAAA (BBBB) -->
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tns="http://ws.service.farm.ru" name="SampleService" targetNamespace="http://ws.service.farm.ru">
+	<wsdl:message name="SampleServiceRequest">
+		<wsdl:part name="yourName" type="xs:string"/>
+	</wsdl:message>
+	<wsdl:message name="SampleServiceResponse">
+		<wsdl:part name="result" type="xs:string"/>
+	</wsdl:message>
+	<wsdl:portType name="SampleService">
+		<wsdl:operation name="getStr1">
+			<wsdl:input name="in" message="tns:SampleServiceRequest"/>
+			<wsdl:output name="out" message="tns:SampleServiceResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="SampleService_HttpBinding" type="tns:SampleService">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="getStr1">
+			<soap:operation soapAction="http://ws.service.farm.ru" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="SampleService_HttpService">
+		<wsdl:port name="SampleService_HttpPort" binding="tns:SampleService_HttpBinding">
+			<soap:address location="http://localhost:8080/farm-service-0.1/service/sample"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
