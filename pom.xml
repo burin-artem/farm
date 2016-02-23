@@ -20,7 +20,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <version.maven>2.6</version.maven>
         <version.spring>4.2.4.RELEASE</version.spring>
-        <version.cxf>2.5.2</version.cxf>
+        <version.cxf>3.1.5</version.cxf>
     </properties>
 
     <build>
