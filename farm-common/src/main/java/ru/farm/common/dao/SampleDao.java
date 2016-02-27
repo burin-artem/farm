@@ -1,5 +1,7 @@
 package ru.farm.common.dao;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,11 +10,8 @@ import javax.sql.DataSource;
 
 public class SampleDao {
 
+    @Autowired
     private DataSource dataSource;
-
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
 
     public void insert(){
 

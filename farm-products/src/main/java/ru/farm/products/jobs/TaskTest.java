@@ -1,6 +1,7 @@
 package ru.farm.products.jobs;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.farm.common.dao.SampleDao;
 
 /**
@@ -10,11 +11,8 @@ public class TaskTest {
 
     private Logger logger = Logger.getLogger(TaskTest.class);
 
+    @Autowired
     SampleDao sampleDao;
-
-    public void setSampleDao(SampleDao sampleDao) {
-        this.sampleDao = sampleDao;
-    }
 
     //@Value( "${abc}" )
     String str;

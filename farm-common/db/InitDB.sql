@@ -1,144 +1,201 @@
--- Table: public."Contractor"
+-- Sequence: public.main_seq
 
--- DROP TABLE public."Contractor";
+-- DROP SEQUENCE public.main_seq;
 
-CREATE TABLE public."Contractor"
+CREATE SEQUENCE public.main_seq
+INCREMENT 1
+MINVALUE 1
+MAXVALUE 9223372036854775807
+START 1
+CACHE 1;
+ALTER TABLE public.main_seq
+OWNER TO postgres;
+
+
+-- Table: public.contractor
+
+-- DROP TABLE public.contractor;
+
+CREATE TABLE public.contractor
 (
-  "Id" integer NOT NULL,
-  "Name" character varying(250),
-  "PhoneNumber" character varying(10), -- Номер телефона для уведомлений
-  "EmailAddrs" character varying(100), -- Эл. адреса через ";" для уведомлений
-  "Status" character varying(20) NOT NULL, -- Статус (активный, закрыт)
-  "DateOpen" date NOT NULL, -- Дата начала работы с поставщиком
-  "DateClose" date, -- Дата окончания работы с поставщиком
-  "Comment" character varying(500),
-  "NotificationType" smallint NOT NULL, -- Тип уведомления поставщика (1-смс, 2-емайл)
-  CONSTRAINT "Contractor_PK_Id" PRIMARY KEY ("Id")
+  id integer NOT NULL,
+  contractor_type character varying(20), -- Тип контрагента: CONTRACTOR (поставщик), потом возможно CLIENT (заказчик)
+  name character varying(250), -- Наименование клиента
+  status character varying(20) NOT NULL, -- Статус (активный, закрыт)
+  date_open date NOT NULL, -- Дата начала работы с поставщиком
+  date_close date, -- Дата окончания работы с поставщиком
+  comment character varying(500),
+  notification_type smallint NOT NULL, -- Тип уведомления поставщика (1-смс, 2-емайл)
+  CONSTRAINT contractor_pk_id PRIMARY KEY (id)
 )
 WITH (
 OIDS=FALSE
 );
-ALTER TABLE public."Contractor"
+ALTER TABLE public.contractor
 OWNER TO postgres;
-COMMENT ON COLUMN public."Contractor"."PhoneNumber" IS 'Номер телефона для уведомлений';
-COMMENT ON COLUMN public."Contractor"."EmailAddrs" IS 'Эл. адреса через ";" для уведомлений';
-COMMENT ON COLUMN public."Contractor"."Status" IS 'Статус (активный, закрыт)';
-COMMENT ON COLUMN public."Contractor"."DateOpen" IS 'Дата начала работы с поставщиком';
-COMMENT ON COLUMN public."Contractor"."DateClose" IS 'Дата окончания работы с поставщиком';
-COMMENT ON COLUMN public."Contractor"."NotificationType" IS 'Тип уведомления поставщика (1-смс, 2-емайл)';
+COMMENT ON COLUMN public.contractor.contractor_type IS 'Тип контрагента: CONTRACTOR (поставщик), потом возможно CLIENT (заказчик)';
+COMMENT ON COLUMN public.contractor.name IS 'Наименование клиента';
+COMMENT ON COLUMN public.contractor.status IS 'Статус (активный, закрыт)';
+COMMENT ON COLUMN public.contractor.date_open IS 'Дата начала работы с поставщиком';
+COMMENT ON COLUMN public.contractor.date_close IS 'Дата окончания работы с поставщиком';
+COMMENT ON COLUMN public.contractor.notification_type IS 'Тип уведомления поставщика (1-смс, 2-емайл)';
 
 
--- Index: public."Contractor_IDX_DateOpen"
+-- Index: public.contractor_idx_date_open
 
--- DROP INDEX public."Contractor_IDX_DateOpen";
+-- DROP INDEX public.contractor_idx_date_open;
 
-CREATE INDEX "Contractor_IDX_DateOpen"
-ON public."Contractor"
+CREATE INDEX contractor_idx_date_open
+ON public.contractor
 USING btree
-("DateOpen");
+(date_open);
 
--- Index: public."Contractor_IDX_Name"
+-- Index: public.contractor_idx_name
 
--- DROP INDEX public."Contractor_IDX_Name";
+-- DROP INDEX public.contractor_idx_name;
 
-CREATE INDEX "Contractor_IDX_Name"
-ON public."Contractor"
+CREATE INDEX contractor_idx_name
+ON public.contractor
 USING btree
-("Name" COLLATE pg_catalog."default");
+(contractor_type COLLATE pg_catalog."default");
 
--- Index: public."Contractor_IDX_Status"
+-- Index: public.contractor_idx_status
 
--- DROP INDEX public."Contractor_IDX_Status";
+-- DROP INDEX public.contractor_idx_status;
 
-CREATE INDEX "Contractor_IDX_Status"
-ON public."Contractor"
+CREATE INDEX contractor_idx_status
+ON public.contractor
 USING btree
-("Status" COLLATE pg_catalog."default");
+(status COLLATE pg_catalog."default");
 
 
 
--- Table: public."Nomenclature"
+-- Table: public.nomenclature
 
--- DROP TABLE public."Nomenclature";
+-- DROP TABLE public.nomenclature;
 
-CREATE TABLE public."Nomenclature"
+CREATE TABLE public.nomenclature
 (
-  "Id" integer NOT NULL,
-  "Name" character varying(100), -- Наименование позиции
-  "VolumeUnit" character varying(20), -- Единица объема (кг, литр)
-  "ParsingNames" character varying(500), -- Наименование для парсинга в заявках (через ";"), регистронезависмо
-  "Comment" character varying(500),
-  CONSTRAINT "Nomenclature_PK_Id" PRIMARY KEY ("Id")
+  id integer NOT NULL,
+  name character varying(100), -- Наименование позиции
+  volume_unit character varying(20), -- Единица объема (кг, литр)
+  parsing_names character varying(500), -- Наименование для парсинга в заявках (через ";"), регистронезависмо
+  comment character varying(500),
+  CONSTRAINT nomenclature_pk_id PRIMARY KEY (id)
 )
 WITH (
 OIDS=FALSE
 );
-ALTER TABLE public."Nomenclature"
+ALTER TABLE public.nomenclature
 OWNER TO postgres;
-COMMENT ON COLUMN public."Nomenclature"."Name" IS 'Наименование позиции';
-COMMENT ON COLUMN public."Nomenclature"."VolumeUnit" IS 'Единица объема (кг, литр)';
-COMMENT ON COLUMN public."Nomenclature"."ParsingNames" IS 'Наименование для парсинга в заявках (через ";"), регистронезависмо';
+COMMENT ON COLUMN public.nomenclature.name IS 'Наименование позиции';
+COMMENT ON COLUMN public.nomenclature.volume_unit IS 'Единица объема (кг, литр)';
+COMMENT ON COLUMN public.nomenclature.parsing_names IS 'Наименование для парсинга в заявках (через ";"), регистронезависмо';
 
 
--- Index: public."Nomenclature_IDX_Name"
+-- Index: public.nomenclature_idx_name
 
--- DROP INDEX public."Nomenclature_IDX_Name";
+-- DROP INDEX public.nomenclature_idx_name;
 
-CREATE INDEX "Nomenclature_IDX_Name"
-ON public."Nomenclature"
+CREATE INDEX nomenclature_idx_name
+ON public.nomenclature
 USING btree
-("Name" COLLATE pg_catalog."default");
+(name COLLATE pg_catalog."default");
 
 
 
--- Table: public."ContractorNomenclature"
+-- Table: public.contractor_nomenclature
 
--- DROP TABLE public."ContractorNomenclature";
+-- DROP TABLE public.contractor_nomenclature;
 
-CREATE TABLE public."ContractorNomenclature"
+CREATE TABLE public.contractor_nomenclature
 (
-  "Id" integer NOT NULL,
-  "ContractorId" integer NOT NULL,
-  "NomenclatureId" integer NOT NULL,
-  "Status" character varying(20) NOT NULL, -- Статус (активно, закрыто)
-  "DateOpen" date NOT NULL, -- Дата начала использования номенклатуры
-  "DateClose" date, -- Дата окончания использования номенклатуры
-  "MinimalVolume" integer NOT NULL, -- Минимальный объем приема заказа в доставку
-  "Comment" character varying(500),
-  CONSTRAINT "ContractorNomenclature_PK_Id" PRIMARY KEY ("Id"),
-  CONSTRAINT "ContractorNomenclature_FK_ContractorId" FOREIGN KEY ("ContractorId")
-  REFERENCES public."Contractor" ("Id") MATCH SIMPLE
+  id integer NOT NULL,
+  contractor_id integer NOT NULL,
+  nomenclature_id integer NOT NULL,
+  status character varying(20) NOT NULL, -- Статус (активно, закрыто)
+  date_open date NOT NULL, -- Дата начала использования номенклатуры
+  date_close date, -- Дата окончания использования номенклатуры
+  minimal_volume integer NOT NULL, -- Минимальный объем приема заказа в доставку
+  comment character varying(500),
+  CONSTRAINT contractor_nomenclature_pk_id PRIMARY KEY (id),
+  CONSTRAINT contractor_nomenclature_fk_contractor_id FOREIGN KEY (contractor_id)
+  REFERENCES public.contractor (id) MATCH SIMPLE
   ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT "ContractorNomenclature_FK_NomenclatureId" FOREIGN KEY ("NomenclatureId")
-  REFERENCES public."Nomenclature" ("Id") MATCH SIMPLE
+  CONSTRAINT contractor_nomenclature_fk_nomenclature_id FOREIGN KEY (nomenclature_id)
+  REFERENCES public.nomenclature (id) MATCH SIMPLE
   ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
 OIDS=FALSE
 );
-ALTER TABLE public."ContractorNomenclature"
+ALTER TABLE public.contractor_nomenclature
 OWNER TO postgres;
-COMMENT ON COLUMN public."ContractorNomenclature"."Status" IS 'Статус (активно, закрыто)';
-COMMENT ON COLUMN public."ContractorNomenclature"."DateOpen" IS 'Дата начала использования номенклатуры';
-COMMENT ON COLUMN public."ContractorNomenclature"."DateClose" IS 'Дата окончания использования номенклатуры';
-COMMENT ON COLUMN public."ContractorNomenclature"."MinimalVolume" IS 'Минимальный объем приема заказа в доставку';
+COMMENT ON COLUMN public.contractor_nomenclature.status IS 'Статус (активно, закрыто)';
+COMMENT ON COLUMN public.contractor_nomenclature.date_open IS 'Дата начала использования номенклатуры';
+COMMENT ON COLUMN public.contractor_nomenclature.date_close IS 'Дата окончания использования номенклатуры';
+COMMENT ON COLUMN public.contractor_nomenclature.minimal_volume IS 'Минимальный объем приема заказа в доставку';
 
 
--- Index: public."ContractorNomenclature_IDX_ContractorId"
+-- Index: public.contractor_nomenclature_idx_contractor_id
 
--- DROP INDEX public."ContractorNomenclature_IDX_ContractorId";
+-- DROP INDEX public.contractor_nomenclature_idx_contractor_id;
 
-CREATE INDEX "ContractorNomenclature_IDX_ContractorId"
-ON public."ContractorNomenclature"
+CREATE INDEX contractor_nomenclature_idx_contractor_id
+ON public.contractor_nomenclature
 USING btree
-("ContractorId");
+(contractor_id);
 
--- Index: public."ContractorNomenclature_IDX_NomenclatureId"
+-- Index: public.contractor_nomenclature_idx_nomenclature_id
 
--- DROP INDEX public."ContractorNomenclature_IDX_NomenclatureId";
+-- DROP INDEX public.contractor_nomenclature_idx_nomenclature_id;
 
-CREATE INDEX "ContractorNomenclature_IDX_NomenclatureId"
-ON public."ContractorNomenclature"
+CREATE INDEX contractor_nomenclature_idx_nomenclature_id
+ON public.contractor_nomenclature
 USING btree
-("NomenclatureId");
+(nomenclature_id);
 
+
+-- Table: public.contact
+
+-- DROP TABLE public.contact;
+
+CREATE TABLE public.contact
+(
+  id integer NOT NULL,
+  contact_type smallint, -- Тип контакта: 1 - mob. phone, 2 - email
+  contractor_id integer,
+  contact character varying(50), -- Контакт
+  status character varying(20), -- Статус: ACTIVE, INACTIVE
+  CONSTRAINT contact_pk_id PRIMARY KEY (id),
+  CONSTRAINT contact_fk_contractor_id FOREIGN KEY (contractor_id)
+  REFERENCES public.contractor (id) MATCH SIMPLE
+  ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+OIDS=FALSE
+);
+ALTER TABLE public.contact
+OWNER TO postgres;
+COMMENT ON COLUMN public.contact.contact_type IS 'Тип контакта: 1 - mob. phone, 2 - email';
+COMMENT ON COLUMN public.contact.contact IS 'Контакт';
+COMMENT ON COLUMN public.contact.status IS 'Статус: ACTIVE, INACTIVE';
+
+
+-- Index: public.contact_idx_contact_type
+
+-- DROP INDEX public.contact_idx_contact_type;
+
+CREATE INDEX contact_idx_contact_type
+ON public.contact
+USING btree
+(contact_type, status COLLATE pg_catalog."default");
+
+-- Index: public.contact_idx_contractor_id
+
+-- DROP INDEX public.contact_idx_contractor_id;
+
+CREATE INDEX contact_idx_contractor_id
+ON public.contact
+USING btree
+(contractor_id);
