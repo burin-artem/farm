@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!-- xmlns="http://www.w3c.org/1999/xhtml" -->
+<html
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:f="http://xmlns.jcp.org/jsf/core"
+        xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions">
+<h:head></h:head>
+<h:body>
+    <h:form>
+
+    <p:dataTable var="nomenclature" value="#{dtNomenclatureView.nomenclatureList}">
+            <p:column headerText="Id">
+                <h:outputText value="#{nomenclature.id}" />
+            </p:column>
+
+            <p:column headerText="name">
+                <h:outputText value="#{nomenclature.name}" />
+            </p:column>
+
+            <p:column headerText="description">
+                <h:outputText value="#{nomenclature.description}" />
+            </p:column>
+        </p:dataTable>
+
+        <tr>
+            <td><h:outputLabel for="name" value="Name : " /></td>
+            <td><p:inputText id="name" value="#{dtNomenclatureView.name}">
+                <f:validateLength minimum="5" />
+                <p:ajax event="blur" update="nameMsg" />
+            </p:inputText>
+                <p:message id="nameMsg" for="name" display="icon"/>
+            </td>
+        </tr>
+        <tr>
+            <td><h:outputLabel for="description" value="Description : " /></td>
+            <td><p:inputText id="description" value="#{dtNomenclatureView.description}">
+                <f:validateLength minimum="5" />
+                <p:ajax event="blur" update="descriptionMsg" />
+            </p:inputText>
+                <p:message id="descriptionMsg" for="description" display="icon"/>
+            </td>
+        </tr>
+        <tr>
+            <td><p:commandButton id="addUser" value="Add" action="#{dtNomenclatureView.addNomenclature}" ajax="false"/></td>
+        </tr>
+    </h:form>
+</h:body>
+</html>

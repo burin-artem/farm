@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:task="http://www.springframework.org/schema/task"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="location" value="classpath:/farm-products.properties" />
+        <property name="location" value="classpath:/farm-operator.properties" />
     </bean>
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -17,14 +16,8 @@
         <property name="password" value="${farm.products.db.password}" />
     </bean>
 
-    <bean id="sampleDao" class="ru.farm.common.dao.NomenclatureDao" />
+    <bean id="nomenclatureDao" class="ru.farm.common.dao.NomenclatureDao" />
 
-    <bean id="taskTest" class="ru.farm.products.jobs.TaskTest">
-        <property name="str" value="${abc}" />
-    </bean>
-
-    <task:scheduled-tasks>
-        <task:scheduled ref="taskTest" method="runTask" fixed-delay="${farm.products.testjob1.delay}" />
-    </task:scheduled-tasks>
+    <bean id="nomenclatureService" class="ru.farm.operator.service.NomenclatureService" scope="session" />
 
 </beans>
