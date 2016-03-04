@@ -19,7 +19,7 @@ public class NomenclatureDao {
     public void insert(){
 
         String sql = "INSERT INTO nomenclature " +
-                "(id, name, volume_unit, comment) VALUES ((select max(id)+1 from nomenclature), ?, ?, ?)";
+                "(name, volume_unit, comment) VALUES (?, ?, ?)";
         Connection conn = null;
 
         try {
@@ -47,7 +47,7 @@ public class NomenclatureDao {
     public void add(Nomenclature nomenclature){
 
         String sql = "INSERT INTO nomenclature " +
-                "(id, name, volume_unit, comment) VALUES ((select max(id)+1 from nomenclature), ?, ?, ?)";
+                "(name, volume_unit, comment) VALUES (?, ?, ?)";
         Connection conn = null;
 
         try {
@@ -73,12 +73,12 @@ public class NomenclatureDao {
     }
     public List<Nomenclature> getNomenclatureList() {
         List<Nomenclature> res = new ArrayList<Nomenclature>();
-        String query = "SELECT id, name, comment FROM nomenclature WHERE id > ?";
+        String query = "SELECT id, name, comment FROM nomenclature";
         Connection conn = null;
         try {
             conn = dataSource.getConnection();
             PreparedStatement preparedStatement = conn.prepareStatement(query);
-            preparedStatement.setInt(1, 0);
+            //preparedStatement.setInt(1, 0);
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
