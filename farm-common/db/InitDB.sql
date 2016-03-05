@@ -4,7 +4,7 @@
 
 CREATE TABLE public.subject
 (
-  id integer NOT NULL,
+  id serial NOT NULL,
   subject_type smallint, -- Тип субъекта: 1 - client, 2 - contractor, 3 - operator
   name character varying(250), -- Наименование клиента
   status character varying(20) NOT NULL, -- Статус: ACTIVE, CLOSED
@@ -62,7 +62,7 @@ USING btree
 
 CREATE TABLE public.client
 (
-  id integer NOT NULL,
+  id serial NOT NULL,
   delivery_address character varying(500), -- Адрес доставки
   CONSTRAINT client_pk_id PRIMARY KEY (id),
   CONSTRAINT client_fk_id FOREIGN KEY (id)
@@ -86,7 +86,7 @@ COMMENT ON COLUMN public.client.delivery_address IS 'Адрес доставки
 
 CREATE TABLE public.contractor
 (
-  id integer NOT NULL,
+  id serial NOT NULL,
   CONSTRAINT contractor_pk_id PRIMARY KEY (id),
   CONSTRAINT contractor_fk_id FOREIGN KEY (id)
   REFERENCES public.subject (id) MATCH SIMPLE
@@ -107,7 +107,7 @@ IS 'Поставщики';
 
 CREATE TABLE public.operator
 (
-  id integer NOT NULL,
+  id serial NOT NULL,
   CONSTRAINT operator_pk_id PRIMARY KEY (id),
   CONSTRAINT operator_fk_id FOREIGN KEY (id)
   REFERENCES public.subject (id) MATCH SIMPLE
@@ -128,7 +128,7 @@ IS 'Оператор';
 
 CREATE TABLE public.contact
 (
-  id integer NOT NULL,
+  id serial NOT NULL,
   contact_type smallint NOT NULL, -- Тип контакта: 1 - mob. phone, 2 - email
   subject_id integer,
   contact character varying(50) NOT NULL, -- Контакт
@@ -176,7 +176,7 @@ USING btree
 
 CREATE TABLE public.nomenclature
 (
-  id integer NOT NULL,
+  id serial NOT NULL,
   name character varying(100) NOT NULL, -- Наименование позиции
   volume_unit character varying(20) NOT NULL, -- Единица объема (кг, литр)
   parsing_names character varying(500), -- Наименование для парсинга в заявках (через ";"), регистронезависмо
@@ -212,9 +212,9 @@ USING btree
 
 CREATE TABLE public.contractor_nomenclature
 (
-  id integer NOT NULL,
-  contractor_id integer NOT NULL,
-  nomenclature_id integer NOT NULL,
+  id serial NOT NULL,
+  contractor_id serial NOT NULL,
+  nomenclature_id serial NOT NULL,
   status character varying(20) NOT NULL, -- Статус: ACTIVE, CLOSED
   date_open date NOT NULL, -- Дата начала использования номенклатуры
   date_close date, -- Дата окончания использования номенклатуры
@@ -267,11 +267,11 @@ USING btree
 
 CREATE TABLE public.orders
 (
-  id integer NOT NULL,
+  id serial NOT NULL,
   origin smallint NOT NULL, -- Происхождение заказа: 1 - смс, 2 - сайт
   order_num character varying(30) NOT NULL, -- Номер заявки (для передачи клиенту/поставщику)
   order_dt timestamp without time zone NOT NULL, -- Дата и время получения заказа
-  nomenclature_id integer NOT NULL,
+  nomenclature_id serial NOT NULL,
   volume integer NOT NULL, -- Объем заказа
   delivery_address character varying(500) NOT NULL, -- Адрес доставки
   status character varying(20) NOT NULL, -- Статус заказа: NEW (новый)
@@ -345,8 +345,8 @@ USING btree
 
 CREATE TABLE public.order_history
 (
-  id integer NOT NULL,
-  order_id integer NOT NULL,
+  id serial NOT NULL,
+  order_id serial NOT NULL,
   dt timestamp without time zone NOT NULL, -- Дата изменения заказа
   origin smallint NOT NULL, -- Источник изменения статуса
   status character varying(20) NOT NULL, -- Статус заказа
@@ -402,7 +402,7 @@ USING btree
 
 CREATE TABLE public.contractor_notification
 (
-  id integer NOT NULL,
+  id serial NOT NULL,
   CONSTRAINT contractor_notification_pk_id PRIMARY KEY (id)
 )
 WITH (
@@ -420,7 +420,7 @@ IS 'Уведомления поставщиков';
 
 CREATE TABLE public.order_notification
 (
-  id integer NOT NULL,
+  id serial NOT NULL,
   CONSTRAINT order_notification_pk_id PRIMARY KEY (id)
 )
 WITH (
@@ -438,7 +438,7 @@ IS 'Уведомления по заказам';
 
 CREATE TABLE public.notification
 (
-  id integer NOT NULL,
+  id serial NOT NULL,
   CONSTRAINT notification_pk_id PRIMARY KEY (id)
 )
 WITH (
@@ -456,7 +456,7 @@ IS 'Исходящие уведомления';
 
 CREATE TABLE public."user"
 (
-  id integer NOT NULL,
+  id serial NOT NULL,
   CONSTRAINT user_pk_id PRIMARY KEY (id)
 )
 WITH (
@@ -474,7 +474,7 @@ IS 'Пользователи';
 
 CREATE TABLE public.requisition_site
 (
-  id integer NOT NULL,
+  id serial NOT NULL,
   CONSTRAINT requisition_site_pk_id PRIMARY KEY (id)
 )
 WITH (
@@ -492,7 +492,7 @@ IS 'Заявки с сайта';
 
 CREATE TABLE public.requisition_sms
 (
-  id integer NOT NULL,
+  id serial NOT NULL,
   CONSTRAINT requisition_sms_pk_id PRIMARY KEY (id)
 )
 WITH (

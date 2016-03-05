@@ -7,20 +7,41 @@
         xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions">
 <h:head></h:head>
 <h:body>
-    <h:form>
+    <h:form id="form">
+        <p:growl id="msgs" showDetail="true" />
 
-    <p:dataTable var="nomenclature" value="#{dtNomenclatureView.nomenclatureList}">
-            <p:column headerText="Id">
+        <p:dataTable var="nomenclature" widgetVar="nomenclaturesTable" value="#{dtNomenclatureView.nomenclatures}" filteredValue="#{dtNomenclatureView.filteredNomenclatures}" selectionMode="single" selection="#{dtNomenclatureSelectionView.selectedNomenclature}" rowKey="#{nomenclature.id}" resizableColumns="true" liveResize="true" sortMode="multiple" stickyHeader="true">
+            <f:facet name="header">
+                <p:outputPanel>
+                    <h:outputText value="Поиск по всем полям:" />
+                    <p:inputText id="globalFilter" onkeyup="PF('nomenclaturesTable').filter()" style="width:150px" placeholder=""/>
+                </p:outputPanel>
+            </f:facet>
+
+            <p:column headerText="Id" sortBy="#{nomenclature.id}" filterBy="#{nomenclature.id}" filterMatchMode="contains">
                 <h:outputText value="#{nomenclature.id}" />
             </p:column>
 
-            <p:column headerText="name">
+            <p:column headerText="name" sortBy="#{nomenclature.name}" filterBy="#{nomenclature.name}" filterMatchMode="contains">
                 <h:outputText value="#{nomenclature.name}" />
             </p:column>
 
-            <p:column headerText="description">
-                <h:outputText value="#{nomenclature.description}" />
+            <p:column headerText="volumeUnit" sortBy="#{nomenclature.volumeUnit}" filterBy="#{nomenclature.volumeUnit}" filterMatchMode="contains">
+                <h:outputText value="#{nomenclature.volumeUnit}" />
             </p:column>
+
+            <p:column headerText="parsingNames" sortBy="#{nomenclature.parsingNames}" filterBy="#{nomenclature.parsingNames}" filterMatchMode="contains">
+                <h:outputText value="#{nomenclature.parsingNames}" />
+            </p:column>
+
+            <p:column headerText="comment" sortBy="#{nomenclature.comment}" filterBy="#{nomenclature.comment}" filterMatchMode="contains">
+                <h:outputText value="#{nomenclature.comment}" />
+            </p:column>
+
+        <f:facet name="footer">
+            <p:commandButton update=":form:nomenclatureDetail" value="Просмотр" oncomplete="PF('nomenclatureDialog').show()" />
+        </f:facet>
+
         </p:dataTable>
 
         <tr>
@@ -33,17 +54,32 @@
             </td>
         </tr>
         <tr>
-            <td><h:outputLabel for="description" value="Description : " /></td>
-            <td><p:inputText id="description" value="#{dtNomenclatureView.description}">
+            <td><h:outputLabel for="comment" value="Comment : " /></td>
+            <td><p:inputText id="comment" value="#{dtNomenclatureView.comment}">
                 <f:validateLength minimum="5" />
-                <p:ajax event="blur" update="descriptionMsg" />
+                <p:ajax event="blur" update="commentMsg" />
             </p:inputText>
-                <p:message id="descriptionMsg" for="description" display="icon"/>
+                <p:message id="commentMsg" for="comment" display="icon"/>
             </td>
         </tr>
         <tr>
             <td><p:commandButton id="addUser" value="Add" action="#{dtNomenclatureView.addNomenclature}" ajax="false"/></td>
         </tr>
+
+        <p:dialog header="Nomenclature Info" widgetVar="nomenclatureDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+            <p:outputPanel id="nomenclatureDetail" style="text-align:center;">
+                <p:panelGrid  columns="2" rendered="#{not empty dtNomenclatureSelectionView.selectedNomenclature}" columnClasses="label,value">
+                    <h:outputText value="Id:" />
+                    <h:outputText value="#{dtNomenclatureSelectionView.selectedNomenclature.id}" />
+
+                    <h:outputText value="Name:" />
+                    <h:outputText value="#{dtNomenclatureSelectionView.selectedNomenclature.name}" />
+
+                    <h:outputText value="Description:" />
+                    <h:outputText value="#{dtNomenclatureSelectionView.selectedNomenclature.comment}" />
+                </p:panelGrid>
+            </p:outputPanel>
+        </p:dialog>
     </h:form>
 </h:body>
 </html>

@@ -19,7 +19,7 @@ public class NomenclatureDao {
     public void insert(){
 
         String sql = "INSERT INTO nomenclature " +
-                "(id, name, volume_unit, comment) VALUES ((select max(id)+1 from nomenclature), ?, ?, ?)";
+                "(name, volume_unit, parsing_names, comment) VALUES (?, ?, ?, ?)";
         Connection conn = null;
 
         try {
@@ -29,6 +29,8 @@ public class NomenclatureDao {
             ps.setString(1, "aaa " + Math.random());
             ps.setString(2, "кг");
             ps.setString(3, "bbb " + Math.random());
+            ps.setString(3, "ccc " + Math.random());
+            ps.setString(3, "ddd " + Math.random());
             ps.executeUpdate();
             ps.close();
 
@@ -47,16 +49,16 @@ public class NomenclatureDao {
     public void add(Nomenclature nomenclature){
 
         String sql = "INSERT INTO nomenclature " +
-                "(id, name, volume_unit, comment) VALUES ((select max(id)+1 from nomenclature), ?, ?, ?)";
+                "(name, volume_unit, parsing_names, comment) VALUES (?, ?, ?, ?)";
         Connection conn = null;
 
         try {
             conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
-            //ps.setInt(1, 1);
             ps.setString(1, nomenclature.getName());
-            ps.setString(2, "кг");
-            ps.setString(3, nomenclature.getDescription());
+            ps.setString(2, nomenclature.getVolumeUnit());
+            ps.setString(3, nomenclature.getParsingNames());
+            ps.setString(4, nomenclature.getComment());
             ps.executeUpdate();
             ps.close();
 
@@ -73,16 +75,16 @@ public class NomenclatureDao {
     }
     public List<Nomenclature> getNomenclatureList() {
         List<Nomenclature> res = new ArrayList<Nomenclature>();
-        String query = "SELECT id, name, comment FROM nomenclature WHERE id > ?";
+        String query = "SELECT id, name, volume_unit, parsing_names, comment FROM nomenclature";
         Connection conn = null;
         try {
             conn = dataSource.getConnection();
             PreparedStatement preparedStatement = conn.prepareStatement(query);
-            preparedStatement.setInt(1, 0);
+            //preparedStatement.setInt(1, 0);
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                res.add(new Nomenclature(resultSet.getLong(1), resultSet.getString(2), resultSet.getString(3)));
+                res.add(new Nomenclature(resultSet.getLong(1), resultSet.getString(2), resultSet.getString(3), resultSet.getString(4), resultSet.getString(5)));
             }
             resultSet.close();
 
