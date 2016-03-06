@@ -28,6 +28,16 @@ public class NomenclatureSelectionView implements Serializable {
     public void init() {
     }
 
+    public void editNomenclature() {
+        Nomenclature nomenclature = new Nomenclature(selectedNomenclature.getId(), selectedNomenclature.getName(), selectedNomenclature.getVolumeUnit(), selectedNomenclature.getParsingNames(), selectedNomenclature.getComment());
+        service.editNomenclature(nomenclature);
+    }
+
+    public void delNomenclature() {
+        Nomenclature nomenclature = new Nomenclature(selectedNomenclature.getId(), selectedNomenclature.getName(), selectedNomenclature.getVolumeUnit(), selectedNomenclature.getParsingNames(), selectedNomenclature.getComment());
+        service.delNomenclature(nomenclature);
+    }
+
     public List<Nomenclature> getNomenclatures() {
         return nomenclatures;
     }

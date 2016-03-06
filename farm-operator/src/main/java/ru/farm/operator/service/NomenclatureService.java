@@ -22,4 +22,12 @@ public class NomenclatureService {
         nomenclatureDao.add(nomenclature);
     }
 
+    public void editNomenclature(Nomenclature nomenclature) {
+        nomenclatureDao.edit(nomenclature);
+    }
+
+    public void delNomenclature(Nomenclature nomenclature) {
+        nomenclatureDao.del(nomenclature);
+    }
+
 }

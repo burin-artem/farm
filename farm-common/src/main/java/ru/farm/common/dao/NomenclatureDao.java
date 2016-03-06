@@ -73,6 +73,62 @@ public class NomenclatureDao {
             }
         }
     }
+
+    public void edit(Nomenclature nomenclature){
+
+        String sql = "UPDATE nomenclature" +
+                " SET name=?, volume_unit=?, parsing_names=?, comment=?" +
+                " WHERE id=?;";
+        Connection conn = null;
+
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, nomenclature.getName());
+            ps.setString(2, nomenclature.getVolumeUnit());
+            ps.setString(3, nomenclature.getParsingNames());
+            ps.setString(4, nomenclature.getComment());
+            ps.setLong(5, nomenclature.getId());
+            ps.executeUpdate();
+            ps.close();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {}
+            }
+        }
+    }
+
+    public void del(Nomenclature nomenclature){
+
+        String sql = "DELETE FROM nomenclature" +
+                " WHERE id=?;";
+        Connection conn = null;
+
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setLong(1, nomenclature.getId());
+            ps.executeUpdate();
+            ps.close();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {}
+            }
+        }
+    }
+
     public List<Nomenclature> getNomenclatureList() {
         List<Nomenclature> res = new ArrayList<Nomenclature>();
         String query = "SELECT id, name, volume_unit, parsing_names, comment FROM nomenclature";

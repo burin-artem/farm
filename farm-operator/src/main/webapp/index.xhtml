@@ -10,7 +10,7 @@
     <h:form id="form">
         <p:growl id="msgs" showDetail="true" />
 
-        <p:dataTable var="nomenclature" widgetVar="nomenclaturesTable" value="#{dtNomenclatureView.nomenclatures}" filteredValue="#{dtNomenclatureView.filteredNomenclatures}" selectionMode="single" selection="#{dtNomenclatureSelectionView.selectedNomenclature}" rowKey="#{nomenclature.id}" resizableColumns="true" liveResize="true" sortMode="multiple" stickyHeader="true">
+        <p:dataTable id="nomenclature" var="nomenclature" widgetVar="nomenclaturesTable" value="#{dtNomenclatureView.nomenclatures}" filteredValue="#{dtNomenclatureView.filteredNomenclatures}" selectionMode="single" selection="#{dtNomenclatureSelectionView.selectedNomenclature}" rowKey="#{nomenclature.id}" resizableColumns="true" liveResize="true" sortMode="multiple" stickyHeader="true">
             <f:facet name="header">
                 <p:outputPanel>
                     <h:outputText value="Поиск по всем полям:" />
@@ -39,45 +39,102 @@
             </p:column>
 
         <f:facet name="footer">
-            <p:commandButton update=":form:nomenclatureDetail" value="Просмотр" oncomplete="PF('nomenclatureDialog').show()" />
+            <p:commandButton update=":form:nomenclatureEdit" value="Изменить" oncomplete="PF('nomenclatureEditDialog').show()" />
         </f:facet>
-
+        <f:facet name="footer">
+            <p:commandButton update=":form:nomenclatureAdd" value="Добавить" oncomplete="PF('nomenclatureAddDialog').show()" />
+        </f:facet>
+        <f:facet name="footer">
+            <p:commandButton update=":form:nomenclatureDel" value="Удалить" oncomplete="PF('nomenclatureDelDialog').show()" />
+        </f:facet>
+        <f:facet name="footer">
+            <p:commandButton value="Обновить" ajax="false" />
+        </f:facet>
         </p:dataTable>
 
-        <tr>
-            <td><h:outputLabel for="name" value="Name : " /></td>
-            <td><p:inputText id="name" value="#{dtNomenclatureView.name}">
-                <f:validateLength minimum="5" />
-                <p:ajax event="blur" update="nameMsg" />
-            </p:inputText>
-                <p:message id="nameMsg" for="name" display="icon"/>
-            </td>
-        </tr>
-        <tr>
-            <td><h:outputLabel for="comment" value="Comment : " /></td>
-            <td><p:inputText id="comment" value="#{dtNomenclatureView.comment}">
-                <f:validateLength minimum="5" />
-                <p:ajax event="blur" update="commentMsg" />
-            </p:inputText>
-                <p:message id="commentMsg" for="comment" display="icon"/>
-            </td>
-        </tr>
-        <tr>
-            <td><p:commandButton id="addUser" value="Add" action="#{dtNomenclatureView.addNomenclature}" ajax="false"/></td>
-        </tr>
-
-        <p:dialog header="Nomenclature Info" widgetVar="nomenclatureDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
-            <p:outputPanel id="nomenclatureDetail" style="text-align:center;">
+        <p:dialog header="Nomenclature Edit" widgetVar="nomenclatureEditDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+            <p:outputPanel id="nomenclatureEdit" style="text-align:center;">
                 <p:panelGrid  columns="2" rendered="#{not empty dtNomenclatureSelectionView.selectedNomenclature}" columnClasses="label,value">
                     <h:outputText value="Id:" />
-                    <h:outputText value="#{dtNomenclatureSelectionView.selectedNomenclature.id}" />
+                    <p:inputText id="id" value="#{dtNomenclatureSelectionView.selectedNomenclature.id}" disabled="true">
+                        <f:validateLength minimum="1" />
+                    </p:inputText>
 
                     <h:outputText value="Name:" />
-                    <h:outputText value="#{dtNomenclatureSelectionView.selectedNomenclature.name}" />
+                    <p:inputText id="name" value="#{dtNomenclatureSelectionView.selectedNomenclature.name}">
+                        <f:validateLength minimum="1" />
+                    </p:inputText>
 
-                    <h:outputText value="Description:" />
-                    <h:outputText value="#{dtNomenclatureSelectionView.selectedNomenclature.comment}" />
+                    <h:outputText value="Volume unit:" />
+                    <p:inputText id="volumeUnit" value="#{dtNomenclatureSelectionView.selectedNomenclature.volumeUnit}">
+                        <f:validateLength minimum="1" />
+                    </p:inputText>
+
+                    <h:outputText value="Parsing names:" />
+                    <p:inputText id="parsingNames" value="#{dtNomenclatureSelectionView.selectedNomenclature.parsingNames}">
+                        <f:validateLength minimum="1" />
+                    </p:inputText>
+
+                    <h:outputText value="Comment:" />
+                    <p:inputText id="comment" value="#{dtNomenclatureSelectionView.selectedNomenclature.comment}">
+                        <f:validateLength minimum="1" />
+                    </p:inputText>
                 </p:panelGrid>
+                <p:commandButton id="editNomenclature" value="Edit" action="#{dtNomenclatureSelectionView.editNomenclature}" onclick="PF('nomenclatureEditDialog').hide();" ajax="false"/>
+            </p:outputPanel>
+        </p:dialog>
+
+        <p:dialog header="Nomenclature Add" widgetVar="nomenclatureAddDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+            <p:outputPanel id="nomenclatureAdd" style="text-align:center;">
+                <p:panelGrid  columns="2" columnClasses="label,value">
+                    <h:outputText value="Name:" />
+                    <p:inputText id="nameIn" value="#{dtNomenclatureView.name}">
+                        <f:validateLength minimum="1" />
+                    </p:inputText>
+
+                    <h:outputText value="Volume unit:" />
+                    <p:inputText id="volumeUnitIn" value="#{dtNomenclatureView.volumeUnit}">
+                        <f:validateLength minimum="1" />
+                    </p:inputText>
+
+                    <h:outputText value="Parsing names:" />
+                    <p:inputText id="parsingNamesIn" value="#{dtNomenclatureView.parsingNames}">
+                        <f:validateLength minimum="1" />
+                    </p:inputText>
+
+                    <h:outputText value="Comment:" />
+                    <p:inputText id="commentIn" value="#{dtNomenclatureView.comment}">
+                        <f:validateLength minimum="1" />
+                    </p:inputText>
+                </p:panelGrid>
+                <p:commandButton id="addNomenclature" value="Add" action="#{dtNomenclatureView.addNomenclature}" onclick="PF('nomenclatureAddDialog').hide();" ajax="false"/>
+            </p:outputPanel>
+        </p:dialog>
+
+        <p:dialog header="Nomenclature Del" widgetVar="nomenclatureDelDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+            <p:outputPanel id="nomenclatureDel" style="text-align:center;">
+                <p:panelGrid  columns="2" rendered="#{not empty dtNomenclatureSelectionView.selectedNomenclature}" columnClasses="label,value">
+                    <h:outputText value="Id:" />
+                    <p:inputText id="idDel" value="#{dtNomenclatureSelectionView.selectedNomenclature.id}" disabled="true">
+                    </p:inputText>
+
+                    <h:outputText value="Name:" />
+                    <p:inputText id="nameDel" value="#{dtNomenclatureSelectionView.selectedNomenclature.name}" disabled="true">
+                    </p:inputText>
+
+                    <h:outputText value="Volume unit:" />
+                    <p:inputText id="volumeUnitDel" value="#{dtNomenclatureSelectionView.selectedNomenclature.volumeUnit}" disabled="true">
+                    </p:inputText>
+
+                    <h:outputText value="Parsing names:" />
+                    <p:inputText id="parsingNamesDel" value="#{dtNomenclatureSelectionView.selectedNomenclature.parsingNames}" disabled="true">
+                    </p:inputText>
+
+                    <h:outputText value="Comment:" />
+                    <p:inputText id="commentDel" value="#{dtNomenclatureSelectionView.selectedNomenclature.comment}" disabled="true">
+                    </p:inputText>
+                </p:panelGrid>
+                <p:commandButton id="delNomenclature" value="Delete" action="#{dtNomenclatureSelectionView.delNomenclature}" onclick="PF('nomenclatureDelDialog').hide();" ajax="false"/>
             </p:outputPanel>
         </p:dialog>
     </h:form>
