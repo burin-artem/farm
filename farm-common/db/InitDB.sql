@@ -1,3 +1,16 @@
+-- Sequence: public.main_seq
+
+-- DROP SEQUENCE public.main_seq;
+
+CREATE SEQUENCE public.main_seq
+INCREMENT 1
+MINVALUE 1
+MAXVALUE 9223372036854775807
+START 1
+CACHE 1;
+ALTER TABLE public.main_seq
+OWNER TO postgres;
+
 -- Table: public.subject
 
 -- DROP TABLE public.subject;

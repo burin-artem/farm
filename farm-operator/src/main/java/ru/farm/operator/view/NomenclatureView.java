@@ -14,12 +14,14 @@ import java.util.List;
 @ViewScoped
 public class NomenclatureView implements Serializable {
 
-    private List<Nomenclature> nomenclatureList;
+    private List<Nomenclature> nomenclatures;
+    private List<Nomenclature> filteredNomenclatures;
 
     private Long id;
     private String name;
-    private String description;
-
+    private String volumeUnit;
+    private String parsingNames;
+    private String comment;
 
     @ManagedProperty("#{nomenclatureService}")
     private NomenclatureService service;
@@ -27,12 +29,12 @@ public class NomenclatureView implements Serializable {
     @PostConstruct
     public void init() {
         if (service.getNomenclatureDao()!=null) {
-            nomenclatureList = service.getNomenclatureDao().getNomenclatureList();
+            nomenclatures = service.getNomenclatureDao().getNomenclatureList();
         }
     }
 
-    public List<Nomenclature> getNomenclatureList() {
-        return nomenclatureList;
+    public List<Nomenclature> getNomenclatures() {
+        return nomenclatures;
     }
 
     public void setService(NomenclatureService service) {
@@ -40,26 +42,55 @@ public class NomenclatureView implements Serializable {
     }
 
     public void addNomenclature() {
-        Nomenclature nomenclature = new Nomenclature(null, getName(), getDescription());
+        Nomenclature nomenclature = new Nomenclature(null, getName(), getVolumeUnit(), getParsingNames(), getComment());
         service.addNomenclature(nomenclature);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public String getVolumeUnit() {
+        return volumeUnit;
     }
 
+    public void setVolumeUnit(String volumeUnit) {
+        this.volumeUnit = volumeUnit;
+    }
 
+    public String getParsingNames() {
+        return parsingNames;
+    }
 
+    public void setParsingNames(String parsingNames) {
+        this.parsingNames = parsingNames;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public List<Nomenclature> getFilteredNomenclatures() {
+        return filteredNomenclatures;
+    }
+
+    public void setFilteredNomenclatures(List<Nomenclature> filteredNomenclatures) {
+        this.filteredNomenclatures = filteredNomenclatures;
+    }
 }
