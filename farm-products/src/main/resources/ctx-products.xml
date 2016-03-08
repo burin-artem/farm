@@ -17,7 +17,8 @@
         <property name="password" value="${farm.products.db.password}" />
     </bean>
 
-    <bean id="sampleDao" class="ru.farm.common.dao.NomenclatureDao" />
+    <bean id="commonDao" class="ru.farm.common.dao.CommonDao" />
+    <bean id="nomenclatureDao" class="ru.farm.common.dao.NomenclatureDao" />
 
     <bean id="taskTest" class="ru.farm.products.jobs.TaskTest">
         <property name="str" value="${abc}" />

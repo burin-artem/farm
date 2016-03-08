@@ -15,22 +15,23 @@ public class NomenclatureDao {
 
     @Autowired
     private DataSource dataSource;
+    @Autowired
+    private CommonDao commonDao;
 
     public void insert(){
 
         String sql = "INSERT INTO nomenclature " +
-                "(name, volume_unit, parsing_names, comment) VALUES (?, ?, ?, ?)";
+                "(id, name, volume_unit, parsing_names, comment) VALUES (?, ?, ?, ?, ?)";
         Connection conn = null;
 
         try {
             conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
-            //ps.setInt(1, 1);
-            ps.setString(1, "aaa " + Math.random());
-            ps.setString(2, "кг");
-            ps.setString(3, "bbb " + Math.random());
-            ps.setString(3, "ccc " + Math.random());
-            ps.setString(3, "ddd " + Math.random());
+            ps.setLong(1, commonDao.getMainSeq());
+            ps.setString(2, "aaa " + Math.random());
+            ps.setString(3, "кг");
+            ps.setString(4, "bbb " + Math.random());
+            ps.setString(5, "ccc " + Math.random());
             ps.executeUpdate();
             ps.close();
 
@@ -49,16 +50,17 @@ public class NomenclatureDao {
     public void add(Nomenclature nomenclature){
 
         String sql = "INSERT INTO nomenclature " +
-                "(name, volume_unit, parsing_names, comment) VALUES (?, ?, ?, ?)";
+                "(id, name, volume_unit, parsing_names, comment) VALUES (?, ?, ?, ?, ?)";
         Connection conn = null;
 
         try {
             conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, nomenclature.getName());
-            ps.setString(2, nomenclature.getVolumeUnit());
-            ps.setString(3, nomenclature.getParsingNames());
-            ps.setString(4, nomenclature.getComment());
+            ps.setLong(1, commonDao.getMainSeq());
+            ps.setString(2, nomenclature.getName());
+            ps.setString(3, nomenclature.getVolumeUnit());
+            ps.setString(4, nomenclature.getParsingNames());
+            ps.setString(5, nomenclature.getComment());
             ps.executeUpdate();
             ps.close();
 

@@ -16,6 +16,7 @@
         <property name="password" value="${farm.products.db.password}" />
     </bean>
 
+    <bean id="commonDao" class="ru.farm.common.dao.CommonDao" />
     <bean id="nomenclatureDao" class="ru.farm.common.dao.NomenclatureDao" />
 
     <bean id="nomenclatureService" class="ru.farm.operator.service.NomenclatureService" scope="session" />
