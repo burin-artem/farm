@@ -1,12 +1,17 @@
 package ru.farm.operator.view;
 
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 import ru.farm.common.entity.Nomenclature;
 import ru.farm.operator.service.NomenclatureService;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import java.io.Serializable;
 import java.util.List;
 
@@ -16,6 +21,8 @@ public class NomenclatureView implements Serializable {
 
     private List<Nomenclature> nomenclatures;
     private List<Nomenclature> filteredNomenclatures;
+    private Nomenclature selectedNomenclature;
+    private List<Nomenclature> selectedNomenclatures;
 
     private Long id;
     private String name;
@@ -33,8 +40,13 @@ public class NomenclatureView implements Serializable {
         }
     }
 
-    public List<Nomenclature> getNomenclatures() {
+    public List<Nomenclature> getNomenclatures()
+    {
         return nomenclatures;
+    }
+
+    public void refreshNomenclatures() {
+        this.init();
     }
 
     public void setService(NomenclatureService service) {
@@ -44,6 +56,44 @@ public class NomenclatureView implements Serializable {
     public void addNomenclature() {
         Nomenclature nomenclature = new Nomenclature(null, getName(), getVolumeUnit(), getParsingNames(), getComment());
         service.addNomenclature(nomenclature);
+        reset();
+    }
+
+    public void editNomenclature() {
+        Nomenclature nomenclature = new Nomenclature(selectedNomenclature.getId(), selectedNomenclature.getName(), selectedNomenclature.getVolumeUnit(), selectedNomenclature.getParsingNames(), selectedNomenclature.getComment());
+        service.editNomenclature(nomenclature);
+        reset();
+    }
+
+    public void delNomenclature() {
+        Nomenclature nomenclature = new Nomenclature(selectedNomenclature.getId(), selectedNomenclature.getName(), selectedNomenclature.getVolumeUnit(), selectedNomenclature.getParsingNames(), selectedNomenclature.getComment());
+        service.delNomenclature(nomenclature);
+        reset();
+    }
+
+    public Nomenclature getSelectedNomenclature() {
+        return selectedNomenclature;
+    }
+
+    public void setSelectedNomenclature(Nomenclature selectedNomenclature) {
+        this.selectedNomenclature = selectedNomenclature;
+    }
+
+    public void onRowSelect(SelectEvent event) {
+        FacesMessage msg = new FacesMessage("Nomenclature Selected", ((Nomenclature) event.getObject()).getId().toString());
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+
+    public void onRowUnselect(UnselectEvent event) {
+        FacesMessage msg = new FacesMessage("Nomenclature Unselected", ((Nomenclature) event.getObject()).getId().toString());
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+
+    public void reset() {
+        //refreshNomenclatures();
+        selectedNomenclature = null;
+        refreshNomenclatures();
+        RequestContext.getCurrentInstance().reset("form:nomenclature");
     }
 
     public Long getId() {

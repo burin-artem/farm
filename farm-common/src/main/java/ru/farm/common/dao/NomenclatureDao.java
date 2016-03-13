@@ -149,6 +149,13 @@ public class NomenclatureDao {
 
         } catch (SQLException e) {
             e.printStackTrace();
+
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {}
+            }
         }
         return res;
     }
