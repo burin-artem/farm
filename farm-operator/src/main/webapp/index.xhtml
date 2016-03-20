@@ -11,31 +11,45 @@
     <h:form id="form">
         <p:growl id="msgs" showDetail="true" />
 
-        <p:dataTable id="nomenclature" var="nomenclature" widgetVar="nomenclaturesTable" value="#{dtNomenclatureView.nomenclatures}" filteredValue="#{dtNomenclatureView.filteredNomenclatures}" selectionMode="single" selection="#{dtNomenclatureView.selectedNomenclature}" rowKey="#{nomenclature.id}" resizableColumns="true" liveResize="true" sortMode="multiple" stickyHeader="true">
+        <p:dataTable id="nomenclature"
+                     var="nomenclature"
+                     widgetVar="nomenclaturesTable"
+                     value="#{dtNomenclatureView.nomenclatures}"
+                     selectionMode="single"
+                     selection="#{dtNomenclatureView.selectedNomenclature}"
+                     rowKey="#{nomenclature.id}"
+                     resizableColumns="true"
+                     liveResize="true"
+                     lazy="true"
+                     stickyHeader="true"
+                     paginator="true"
+                     rows="10"
+                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                     rowsPerPageTemplate="5,10,15">
             <f:facet name="header">
                 <p:outputPanel>
                     <h:outputText value="Поиск по всем полям:" />
-                    <p:inputText id="globalFilter" onkeyup="PF('nomenclaturesTable').filter()" style="width:150px" placeholder=""/>
+                    <p:inputText id="globalFilter" onkeyup="PF('nomenclaturesTable').filter()" style="width:150px" placeholder="" />
                 </p:outputPanel>
             </f:facet>
 
-            <p:column headerText="Id" sortBy="#{nomenclature.id}" filterBy="#{nomenclature.id}" filterMatchMode="contains">
+            <p:column headerText="Id" sortBy="#{nomenclature.id}" filterBy="#{nomenclature.id}" filterMatchMode="contains" field="id">
                 <h:outputText value="#{nomenclature.id}" />
             </p:column>
 
-            <p:column headerText="name" sortBy="#{nomenclature.name}" filterBy="#{nomenclature.name}" filterMatchMode="contains">
+            <p:column headerText="name" sortBy="#{nomenclature.name}" filterBy="#{nomenclature.name}" filterMatchMode="contains" field="name">
                 <h:outputText value="#{nomenclature.name}" />
             </p:column>
 
-            <p:column headerText="volumeUnit" sortBy="#{nomenclature.volumeUnit}" filterBy="#{nomenclature.volumeUnit}" filterMatchMode="contains">
+            <p:column headerText="volumeUnit" sortBy="#{nomenclature.volumeUnit}" filterBy="#{nomenclature.volumeUnit}" filterMatchMode="contains" field="volume_unit">
                 <h:outputText value="#{nomenclature.volumeUnit}" />
             </p:column>
 
-            <p:column headerText="parsingNames" sortBy="#{nomenclature.parsingNames}" filterBy="#{nomenclature.parsingNames}" filterMatchMode="contains">
+            <p:column headerText="parsingNames" sortBy="#{nomenclature.parsingNames}" filterBy="#{nomenclature.parsingNames}" filterMatchMode="contains" field="parsing_names">
                 <h:outputText value="#{nomenclature.parsingNames}" />
             </p:column>
 
-            <p:column headerText="comment" sortBy="#{nomenclature.comment}" filterBy="#{nomenclature.comment}" filterMatchMode="contains">
+            <p:column headerText="comment" sortBy="#{nomenclature.comment}" filterBy="#{nomenclature.comment}" filterMatchMode="contains" field="comment">
                 <h:outputText value="#{nomenclature.comment}" />
             </p:column>
 

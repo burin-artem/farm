@@ -3,6 +3,9 @@ package ru.farm.operator.view;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
+import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortOrder;
+import ru.farm.common.dao.CommonDao;
 import ru.farm.common.entity.Nomenclature;
 import ru.farm.operator.service.NomenclatureService;
 
@@ -14,15 +17,14 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 @ManagedBean(name="dtNomenclatureView")
 @ViewScoped
 public class NomenclatureView implements Serializable {
 
-    private List<Nomenclature> nomenclatures;
-    private List<Nomenclature> filteredNomenclatures;
+    private LazyDataModel<Nomenclature> nomenclatures;
     private Nomenclature selectedNomenclature;
-    private List<Nomenclature> selectedNomenclatures;
 
     private Long id;
     private String name;
@@ -36,12 +38,34 @@ public class NomenclatureView implements Serializable {
     @PostConstruct
     public void init() {
         if (service.getNomenclatureDao()!=null) {
-            nomenclatures = service.getNomenclatureDao().getNomenclatureList();
+            nomenclatures = new LazyDataModel<Nomenclature>() {
+                private static final long serialVersionUID = 1L;
+                @Override
+                public List<Nomenclature> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
+                    CommonDao.SortOrder sortOrderOwn = CommonDao.SortOrder.values()[sortOrder.ordinal()];
+                    List<Nomenclature> result = service.getNomenclatureDao().getNomenclatureList(first, pageSize, sortField, sortOrderOwn, filters);
+                    nomenclatures.setRowCount(service.getNomenclatureDao().getNomenclatureCount(filters));
+                    return result;
+                }
+
+                @Override
+                public Nomenclature getRowData(String rowKey) {
+                    for(Nomenclature nomenclature : nomenclatures) {
+                        if(nomenclature.getId().toString().equals(rowKey))
+                            return nomenclature;
+                    }
+                    return null;
+                }
+
+                @Override
+                public Object getRowKey(Nomenclature nomenclature) {
+                    return nomenclature.getId();
+                }
+            };
         }
     }
 
-    public List<Nomenclature> getNomenclatures()
-    {
+    public LazyDataModel<Nomenclature> getNomenclatures() {
         return nomenclatures;
     }
 
@@ -134,13 +158,5 @@ public class NomenclatureView implements Serializable {
 
     public void setComment(String comment) {
         this.comment = comment;
-    }
-
-    public List<Nomenclature> getFilteredNomenclatures() {
-        return filteredNomenclatures;
-    }
-
-    public void setFilteredNomenclatures(List<Nomenclature> filteredNomenclatures) {
-        this.filteredNomenclatures = filteredNomenclatures;
     }
 }
