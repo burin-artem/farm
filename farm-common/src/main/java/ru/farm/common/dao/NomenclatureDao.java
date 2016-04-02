@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.sql.DataSource;
 
 public class NomenclatureDao {
@@ -131,9 +132,31 @@ public class NomenclatureDao {
         }
     }
 
-    public List<Nomenclature> getNomenclatureList() {
+    public List<Nomenclature> getNomenclatureList(int first, int pageSize,
+                                                       String sortField,
+                                                  CommonDao.SortOrder sortOrder,
+                                                       Map<String, Object> filters) {
         List<Nomenclature> res = new ArrayList<Nomenclature>();
-        String query = "SELECT id, name, volume_unit, parsing_names, comment FROM nomenclature";
+        String query = "SELECT id, name, volume_unit, parsing_names, comment FROM nomenclature where 1=1 ";
+        query = processFilters(filters, query);
+
+        if (sortField != null) {
+            query += " order by "+sortField+" "
+                    +(sortOrder.equals(CommonDao.SortOrder.ASCENDING) ?
+                    "ASC" :
+                    "DESC");
+        }
+
+        if (first > 0) {
+            query += " offset " + first + " ";
+        }
+
+        if (pageSize > 0) {
+            query += " limit " + pageSize + " ";
+        }
+
+        System.out.println(query);
+
         Connection conn = null;
         try {
             conn = dataSource.getConnection();
@@ -149,8 +172,91 @@ public class NomenclatureDao {
 
         } catch (SQLException e) {
             e.printStackTrace();
+
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {}
+            }
         }
         return res;
+    }
+
+    public Integer getNomenclatureCount(Map<String, Object> filters) {
+        Integer res = null;
+        String query = "SELECT count(1) FROM nomenclature where 1=1 ";
+        query = processFilters(filters, query);
+
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            //preparedStatement.setInt(1, 0);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                res = resultSet.getInt(1);
+            }
+            resultSet.close();
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {}
+            }
+        }
+        return res;
+    }
+
+    private String processFilters(Map<String, Object> filters, String query) {
+        String idFilter = (String) filters.get("id");
+        String nameFilter = (String) filters.get("name");
+        String volumeUnitFilter = (String) filters.get("volume_unit");
+        String parsingNamesFilter = (String) filters.get("parsing_names");
+        String commentFilter = (String) filters.get("comment");
+        String globalFilter = (String) filters.get("globalFilter");
+
+        if (idFilter != null) {
+            if (CommonDao.isInteger(idFilter)) {
+                query += " and id = '" + idFilter + "' ";
+            } else {
+                query += " and 0=1 ";
+            }
+        }
+        if (nameFilter != null) {
+            query += " and name like '%" + nameFilter + "%' ";
+        }
+        if (volumeUnitFilter != null) {
+            query += " and volume_unit like '%" + volumeUnitFilter + "%' ";
+        }
+        if (parsingNamesFilter != null) {
+            query += " and parsing_names like '%" + parsingNamesFilter + "%' ";
+        }
+        if (commentFilter != null) {
+            query += " and comment like '%" + idFilter + "%' ";
+        }
+
+        if (globalFilter != null && !globalFilter.trim().isEmpty()) {
+            query += " and (";
+
+            if (CommonDao.isInteger(globalFilter)) {
+                query += " id = '" + globalFilter + "' or ";
+            }
+
+            query += " name like '%" + globalFilter + "%' " +
+                     " or volume_unit like '%" + globalFilter + "%' " +
+                     " or parsing_names like '%" + globalFilter + "%' " +
+                     " or comment like '%" + globalFilter + "%' " +
+                     ") ";
+        }
+
+        return query;
     }
 
  /*   public Customer findByCustomerId(int custId){

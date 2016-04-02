@@ -470,6 +470,8 @@ IS 'Исходящие уведомления';
 CREATE TABLE public."user"
 (
   id integer NOT NULL,
+  name character varying(60) NOT NULL,
+  password character varying(60) NOT NULL,
   CONSTRAINT user_pk_id PRIMARY KEY (id)
 )
 WITH (
